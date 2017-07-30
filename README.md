@@ -1,12 +1,12 @@
-# semantic-release condition-travis
+# semantic-release condition-travis-enterprise
 
-[![npm version](https://badge.fury.io/js/%40semantic-release%2Fcondition-travis.svg)](http://badge.fury.io/js/%40semantic-release%2Fcondition-travis)
-[![Build Status](https://travis-ci.org/semantic-release/condition-travis.svg?branch=next)](https://travis-ci.org/semantic-release/condition-travis)
-[![Coverage Status](https://coveralls.io/repos/semantic-release/condition-travis/badge.svg?branch=next&service=github)](https://coveralls.io/github/semantic-release/condition-travis?branch=next)
+[![Build Status](https://travis-ci.org/jlengstorf/condition-travis-enterprise.svg?branch=next)](https://travis-ci.org/jlengstorf/condition-travis-enterprise)
+[![Coverage Status](https://coveralls.io/repos/jlengstorf/condition-travis-enterprise/badge.svg?branch=next&service=github)](https://coveralls.io/github/jlengstorf/condition-travis-enterprise?branch=next)
 
-[![Dependency Status](https://david-dm.org/semantic-release/condition-travis/next.svg)](https://david-dm.org/semantic-release/condition-travis/next)
-[![devDependency Status](https://david-dm.org/semantic-release/condition-travis/next/dev-status.svg)](https://david-dm.org/semantic-release/condition-travis/next#info=devDependencies)
-
-[![Join the chat at https://gitter.im/semantic-release/semantic-release](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/semantic-release/semantic-release?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat)](https://github.com/feross/standard)
+
+For enterprise users, [`travis-deploy-once`](https://github.com/semantic-release/travis-deploy-once) fails because it attempts to log into public Travis CI and public GitHub. To work around this, this repo removes the call to `travis-deploy-once`.
+
+### NOTE: If your build process runs tests in a matrix, this _does not_ ensure that `semantic-release` only runs once.
+
+Please [submit a PR](https://github.com/jlengstorf/condition-travis-enterprise/pulls) if you know how to check this on enterprise Travis CI.

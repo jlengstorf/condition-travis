@@ -1,8 +1,11 @@
 {
-  "name": "@semantic-release/condition-travis",
-  "description": "make sure only the right builds on travis get published",
+  "name": "condition-travis-enerprise",
+  "description": "Just like @semantic-release/condition-travis, but drops travis-deploy-once because it relies on public GH/Travis.",
   "version": "0.0.0-placeholder",
   "author": "Stephan Bönnemann <stephan@boennemann.me> (http://boennemann.me)",
+  "contributors": [
+    "Jason Lengstorf <jason@lengstorf.com> (https://code.lengstorf.com)"
+  ],
   "bugs": {
     "url": "https://github.com/semantic-release/condition-travis/issues"
   },
@@ -14,10 +17,15 @@
   "devDependencies": {
     "bluebird": "^3.4.6",
     "coveralls": "^2.11.2",
+    "eslint": "^4.3.0",
+    "eslint-config-airbnb-base": "^11.3.1",
+    "eslint-config-prettier": "^2.3.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-prettier": "^2.1.2",
     "nyc": "^9.0.1",
-    "proxyquire": "^1.7.1",
+    "prettier": "^1.5.3",
+    "proxyquire": "^1.8.0",
     "semantic-release": "^6.3.1",
-    "standard": "^8.0.0",
     "tap": "^10.0.0"
   },
   "files": [
@@ -33,21 +41,19 @@
   ],
   "license": "MIT",
   "publishConfig": {
-    "access": "public",
-    "tag": "next"
+    "access": "public"
   },
   "release": {
-    "branch": "next",
     "verifyConditions": "./"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/semantic-release/condition-travis.git"
+    "url": "https://github.com/jlengstorf/condition-travis-enterprise.git"
   },
   "scripts": {
     "coverage": "nyc report",
     "coverage:upload": "npm run -s coverage -- --reporter=text-lcov | coveralls",
-    "pretest": "standard",
+    "pretest": "eslint index.js test.js --fix",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "test": "nyc tap --no-cov test.js"
   }
