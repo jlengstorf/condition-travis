@@ -52,6 +52,8 @@ module.exports = function verifyConditions(pluginConfig, config, cb) {
     );
   }
 
+  // TODO add `travis-deploy-once` in an enterprise-friendly way
+
   // If we get here, all conditions were met.
   return cb(null);
 };

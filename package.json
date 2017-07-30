@@ -1,5 +1,5 @@
 {
-  "name": "condition-travis-enerprise",
+  "name": "condition-travis-enterprise",
   "description": "Just like @semantic-release/condition-travis, but drops travis-deploy-once because it relies on public GH/Travis.",
   "version": "0.0.0-placeholder",
   "author": "Stephan Bönnemann <stephan@boennemann.me> (http://boennemann.me)",
