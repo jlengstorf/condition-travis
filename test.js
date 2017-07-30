@@ -1,153 +1,111 @@
-var Promise = require('bluebird')
-var proxyquire = require('proxyquire')
-var test = require('tap').test
-var SRError = require('@semantic-release/error')
+/* eslint import/no-extraneous-dependencies: 0 */
 
-var condition = proxyquire('./', {
-  'travis-deploy-once': Promise.resolve.bind(null, true)
-})
+'use strict';
 
-test('raise errors in travis environment', function (t) {
-  t.test('only runs on travis', function (tt) {
-    tt.plan(2)
+// const proxyquire = require('proxyquire');
+const test = require('tap').test;
+const SRError = require('@semantic-release/error');
 
-    condition({}, {env: {}}, function (err) {
-      tt.ok(err instanceof SRError)
-      tt.is(err.code, 'ENOTRAVIS')
-    })
-  })
+const condition = require('./');
 
-  t.test('not running on pull requests', function (tt) {
-    tt.plan(2)
-    condition({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_PULL_REQUEST: '105'
-      }
-    }, function (err) {
-      tt.ok(err instanceof SRError)
-      tt.is(err.code, 'EPULLREQUEST')
-    })
-  })
+test('raise errors in travis environment', t => {
+  t.test('only runs on travis', tt => {
+    tt.plan(2);
 
-  t.test('not running on tags', function (tt) {
-    tt.plan(2)
-    condition({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_PULL_REQUEST: 'false',
-        TRAVIS_TAG: 'v1.0.0'
-      }
-    }, function (err) {
-      tt.ok(err instanceof SRError)
-      tt.is(err.code, 'EGITTAG')
-    })
-  })
+    condition({}, { env: {} }, err => {
+      tt.ok(err instanceof SRError);
+      tt.is(err.code, 'ENOTRAVIS');
+    });
+  });
 
-  t.test('only running on specified branch', function (tt) {
-    tt.plan(5)
-
-    condition({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_BRANCH: 'master'
+  t.test('not running on pull requests', tt => {
+    tt.plan(2);
+    condition(
+      {},
+      {
+        env: {
+          TRAVIS: 'true',
+          TRAVIS_PULL_REQUEST: '105',
+        },
       },
-      options: {
-        branch: 'master'
+      err => {
+        tt.ok(err instanceof SRError);
+        tt.is(err.code, 'EPULLREQUEST');
       }
-    }, function (err) {
-      tt.is(err, null)
-    })
+    );
+  });
 
-    condition({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_BRANCH: 'notmaster'
+  t.test('not running on tags', tt => {
+    tt.plan(2);
+    condition(
+      {},
+      {
+        env: {
+          TRAVIS: 'true',
+          TRAVIS_PULL_REQUEST: 'false',
+          TRAVIS_TAG: 'v1.0.0',
+        },
       },
-      options: {
-        branch: 'master'
+      err => {
+        tt.ok(err instanceof SRError);
+        tt.is(err.code, 'EGITTAG');
       }
-    }, function (err) {
-      tt.ok(err instanceof SRError)
-      tt.is(err.code, 'EBRANCHMISMATCH')
-    })
+    );
+  });
 
-    condition({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_BRANCH: 'master'
+  t.test('only running on specified branch', tt => {
+    tt.plan(5);
+
+    condition(
+      {},
+      {
+        env: {
+          TRAVIS: 'true',
+          TRAVIS_BRANCH: 'master',
+        },
+        options: {
+          branch: 'master',
+        },
       },
-      options: {
-        branch: 'foo'
+      err => {
+        tt.is(err, null);
       }
-    }, function (err) {
-      tt.ok(err instanceof SRError)
-      tt.is(err.code, 'EBRANCHMISMATCH')
-    })
-  })
+    );
 
-  t.test('supports travis-deploy-once', function (tt) {
-    tt.plan(6)
-
-    proxyquire('./', {
-      'travis-deploy-once': Promise.resolve.bind(null, true)
-    })({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_BRANCH: 'master'
+    condition(
+      {},
+      {
+        env: {
+          TRAVIS: 'true',
+          TRAVIS_BRANCH: 'notmaster',
+        },
+        options: {
+          branch: 'master',
+        },
       },
-      options: {
-        branch: 'master'
+      err => {
+        tt.ok(err instanceof SRError);
+        tt.is(err.code, 'EBRANCHMISMATCH');
       }
-    }, function (err) {
-      tt.is(err, null)
-    })
+    );
 
-    proxyquire('./', {
-      'travis-deploy-once': Promise.resolve.bind(null, null)
-    })({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_BRANCH: 'master'
+    condition(
+      {},
+      {
+        env: {
+          TRAVIS: 'true',
+          TRAVIS_BRANCH: 'master',
+        },
+        options: {
+          branch: 'foo',
+        },
       },
-      options: {
-        branch: 'master'
+      err => {
+        tt.ok(err instanceof SRError);
+        tt.is(err.code, 'EBRANCHMISMATCH');
       }
-    }, function (err) {
-      tt.ok(err instanceof SRError)
-      tt.is(err.code, 'ENOBUILDLEADER')
-    })
+    );
+  });
 
-    proxyquire('./', {
-      'travis-deploy-once': Promise.resolve.bind(null, false)
-    })({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_BRANCH: 'master'
-      },
-      options: {
-        branch: 'master'
-      }
-    }, function (err) {
-      tt.ok(err instanceof SRError)
-      tt.is(err.code, 'EOTHERSFAILED')
-    })
-
-    var error = new Error()
-    proxyquire('./', {
-      'travis-deploy-once': Promise.reject.bind(null, error)
-    })({}, {
-      env: {
-        TRAVIS: 'true',
-        TRAVIS_BRANCH: 'master'
-      },
-      options: {
-        branch: 'master'
-      }
-    }, function (err) {
-      tt.is(err, error)
-    })
-  })
-
-  t.end()
-})
+  t.end();
+});
