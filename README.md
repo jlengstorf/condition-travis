@@ -7,6 +7,24 @@
 
 For enterprise users, [`travis-deploy-once`](https://github.com/semantic-release/travis-deploy-once) fails because it attempts to log into public Travis CI and public GitHub. To work around this, this repo removes the call to `travis-deploy-once`.
 
+## Installation and Usage
+
+In your repo, install `condition-travis-enterprise`:
+
+```sh
+npm install -D condition-travis-enterprise
+```
+
+In `package.json`, add the following:
+
+```diff
+  "release": {
+    "githubUrl": "<YOUR_GITHUB_ENTERPRISE_URL>",
+    "githubApiPathPrefix": "api/v3",
++   "verifyConditions": "condition-travis-enterprise"
+  }
+```
+
 ### NOTE: If your build process runs tests in a matrix, this _does not_ ensure that `semantic-release` only runs once.
 
 Please [submit a PR](https://github.com/jlengstorf/condition-travis-enterprise/pulls) if you know how to check this on enterprise Travis CI.
